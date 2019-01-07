@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import operator
 import re
 import subprocess
 import time
@@ -50,6 +51,7 @@ class SiteSurvey:
                 else:
                     res = iw_parse.call_iwlist(s.intf)
                 cells = iw_parse.get_parsed_cells(res.decode().split('\n'))
+                cells.sort(key=operator.itemgetter('Quality'))
 
                 screen.append('BSSID              SSID                              Freq  Chan  Encr  Qual  Sig  Noise  Mode')
                 for cell in cells:
