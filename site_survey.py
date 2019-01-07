@@ -54,7 +54,7 @@ class SiteSurvey:
                 cells = iw_parse.get_parsed_cells(res.decode().split('\n'))
                 cells.sort(key=operator.itemgetter('Quality'))
 
-                screen.append('BSSID              SSID                              Freq  Chan  Encr  Qual  Sig  Noise  Mode')
+                screen.append('BSSID              SSID                              Freq  Chan  Encr  Qual  Sig  Noise  Mode    Uptime')
                 for cell in cells:
                     line = '{}  {:<32}  {:<5}  {:>3}  {}  {:>3}%  {:>3}  {:>5}  {:<8}'.format(cell['Address'], cell['Name'], cell['Frequency'], cell['Channel'], cell['Encryption'], cell['Quality'], cell['Signal Level'], cell['Noise Level'], cell['Mode'])
                     bssid = cell['Address']
@@ -66,7 +66,7 @@ class SiteSurvey:
                     cells_all[bssid] = line
                 for bssid in cells_all:
                     line = cells_all[bssid]
-                    line = line + '  ' + str(uptime[bssid])
+                    line = line + '{:>6}'.format(uptime[bssid])
                     if not bssid in bssids:
                         line = '\033[33m' + line + '\033[0m'
                     if s.ssid and line.find(s.ssid) != -1:
