@@ -56,7 +56,7 @@ class SiteSurvey:
 
                 screen.append('BSSID              SSID                              Freq  Chan  Encr  Qual  Sig  Noise  Mode    Uptime')
                 for cell in cells:
-                    line = '{}  {:<32}  {:<5}  {:>3}  {}  {:>3}%  {:>3}  {:>5}  {:<8}'.format(cell['Address'], cell['Name'], cell['Frequency'], cell['Channel'], cell['Encryption'], cell['Quality'], cell['Signal Level'], cell['Noise Level'], cell['Mode'])
+                    line = self._format_cell(cell)
                     bssid = cell['Address']
                     bssids.add(bssid)
                     if bssid in uptime:
@@ -81,6 +81,14 @@ class SiteSurvey:
             pass
         finally:
             self.disconnect()
+
+    def _format_cell(self, cell):
+        return '{}  {:<32}  {:<5}  {:>3}  {}  {:>3}%  {:>3}  {:>5}  {:<8}'.\
+        format(
+            cell['Address'], cell['Name'], cell['Frequency'],
+            cell['Channel'], cell['Encryption'], cell['Quality'],
+            cell['Signal Level'], cell['Noise Level'], cell['Mode']
+        )
 
 if __name__ == "__main__":
     import settings
