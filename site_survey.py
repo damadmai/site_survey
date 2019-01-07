@@ -62,7 +62,7 @@ class SiteSurvey:
                     else:
                         uptime[bssid] = 0
                     cells_all[bssid] = cell
-                cells_sorted = sorted(list(cells_all.values()), key=lambda k: k['Quality'])
+                cells_sorted = sorted(list(cells_all.values()), key=lambda k: int(k['Quality']), reverse=True)
                 for cell in cells_sorted:
                     bssid = cell['Address']
                     line = self._format_cell(cell)
