@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import re
 import subprocess
 import time
@@ -73,3 +75,8 @@ class SiteSurvey:
         finally:
             self.disconnect()
 
+if __name__ == "__main__":
+    import settings
+
+    sur = SiteSurvey()
+    sur.scan(settings.s)
