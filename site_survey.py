@@ -38,6 +38,7 @@ class SiteSurvey:
                 self.connect(s)
                 time.sleep(0.5)
             uptime = {}
+            cells_all = {}
             while True:
                 bssids = set()
                 screen = []
@@ -62,11 +63,15 @@ class SiteSurvey:
                         uptime[bssid] = uptime[bssid] + 1
                     else:
                         uptime[bssid] = 0
+                    cells_all[bssid] = line
+                for bssid in cells_all:
+                    line = cells_all[bssid]
                     line = line + '  ' + str(uptime[bssid])
+                    if not bssid in bssids:
+                        line = '\033[33m' + line + '\033[0m'
                     if s.ssid and line.find(s.ssid) != -1:
-                        screen.append('\033[36m' + line + '\033[0m')
-                    else:
-                        screen.append(line)
+                        line = '\033[36m' + line + '\033[0m'
+                    screen.append(line)
                 for bssid in (uptime.keys() - bssids):
                     uptime[bssid] = 0
 
