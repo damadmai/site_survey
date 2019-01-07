@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import operator
 import re
 import subprocess
 import time
@@ -52,7 +51,6 @@ class SiteSurvey:
                 else:
                     res = iw_parse.call_iwlist(s.intf)
                 cells = iw_parse.get_parsed_cells(res.decode().split('\n'))
-                cells.sort(key=operator.itemgetter('Quality'))
 
                 screen.append('BSSID              SSID                              Freq  Chan  Encr  Qual  Sig  Noise  Mode    Uptime')
                 for cell in cells:
@@ -63,9 +61,11 @@ class SiteSurvey:
                         uptime[bssid] = uptime[bssid] + 1
                     else:
                         uptime[bssid] = 0
-                    cells_all[bssid] = line
-                for bssid in cells_all:
-                    line = cells_all[bssid]
+                    cells_all[bssid] = cell
+                cells_sorted = sorted(list(cells_all.values()), key=lambda k: k['Quality'])
+                for cell in cells_sorted:
+                    bssid = cell['Address']
+                    line = self._format_cell(cell)
                     line = line + '{:>6}'.format(uptime[bssid])
                     if not bssid in bssids:
                         line = '\033[33m' + line + '\033[0m'
