@@ -83,7 +83,7 @@ class SiteSurvey:
             self.disconnect()
 
     def _format_cell(self, cell):
-        return '{}  {:<32}  {:<5}  {:>3}  {}  {:>3}%  {:>3}  {:>5}  {:<8}'.\
+        return '{}  {:<32}  {:<5}  {:>3}  {:>4}  {:>3}%  {:>3}  {:>5}  {:<8}'.\
         format(
             cell['Address'], cell['Name'], cell['Frequency'],
             cell['Channel'], cell['Encryption'], cell['Quality'],
