@@ -35,7 +35,7 @@ class SiteSurvey:
         try:
             if s.remote:
                 self.connect(s)
-                time.sleep(0.5)
+                time.sleep(1)
             uptime = {}
             cells_all = {}
             while True:
