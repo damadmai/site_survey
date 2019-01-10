@@ -54,7 +54,6 @@ class SiteSurvey:
 
                 screen.append('BSSID              SSID                              Freq  Chan  Encr  Qual  Sig  Noise  Mode    Uptime')
                 for cell in cells:
-                    line = self._format_cell(cell)
                     bssid = cell['Address']
                     bssids.add(bssid)
                     if bssid in uptime:
@@ -64,6 +63,8 @@ class SiteSurvey:
                     cells_all[bssid] = cell
                 cells_sorted = sorted(list(cells_all.values()), key=lambda k: int(k['Quality']), reverse=True)
                 for cell in cells_sorted:
+                    if s.openonly and cell['Encryption'] != 'Open':
+                        continue
                     bssid = cell['Address']
                     line = self._format_cell(cell)
                     line = line + '{:>6}'.format(uptime[bssid])

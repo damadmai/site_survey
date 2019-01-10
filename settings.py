@@ -7,4 +7,5 @@ class s():
     user = 'ubnt'
     pw   = 'ubnt'
     host = '192.168.1.20'
+    openonly = False
 
