@@ -70,7 +70,11 @@ class SiteSurvey:
                     else:
                         uptime[bssid] = 0
                     cells_all[bssid] = cell
-                cells_sorted = sorted(list(cells_all.values()), key=lambda k: int(k['Quality']), reverse=True)
+                if s.order in ['Frequency', 'Channel', 'Quality', 'Signal Level', 'Noise Level']:
+                    key = lambda k: float(k[s.order])
+                else:
+                    key = lambda k: k[s.order]
+                cells_sorted = sorted(list(cells_all.values()), key=key, reverse=s.invert)
                 for cell in cells_sorted:
                     if s.openonly and cell['Encryption'] != 'Open':
                         continue
