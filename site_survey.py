@@ -70,7 +70,7 @@ class SiteSurvey:
                     line = line + '{:>6}'.format(uptime[bssid])
                     if not bssid in bssids:
                         line = '\033[33m' + line + '\033[0m'
-                    if s.ssid and line.find(s.ssid) != -1:
+                    if s.ssid and s.ssid in line:
                         line = '\033[36m' + line + '\033[0m'
                     screen.append(line)
                 for bssid in (uptime.keys() - bssids):
