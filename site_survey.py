@@ -7,6 +7,10 @@ import time
 import iw_parse
 
 
+class SiteSurveyError(Exception):
+    pass
+
+
 class SiteSurvey:
     def __init__(self):
         self._controlmaster = None
@@ -44,12 +48,17 @@ class SiteSurvey:
                 time.sleep(0.5)
                 screen.append('\033c')
                 if s.remote:
-                    res = subprocess.check_output(['ssh'] +
-                            self._cm_options + [
-                            '-l', s.user, s.address,
-                            'iwlist', s.intf, 'scan'])
+                    try:
+                        res = subprocess.check_output(['ssh'] +
+                                self._cm_options + [
+                                '-l', s.user, s.address,
+                                'iwlist', s.intf, 'scan'])
+                    except subprocess.CalledProcessError:
+                        raise SiteSurveyError('Could not connect via SSH')
                 else:
                     res = iw_parse.call_iwlist(s.intf)
+                if not res:
+                    raise SiteSurveyError('Scan failed, maybe wrong interface')
                 cells = iw_parse.get_parsed_cells(res.decode().split('\n'))
 
                 screen.append('BSSID              SSID                              Freq  Chan  Encr  Qual  Sig  Noise  Mode    Uptime')
@@ -77,9 +86,10 @@ class SiteSurvey:
                     uptime[bssid] = 0
 
                 print('\n'.join(screen))
-        except (KeyboardInterrupt, subprocess.CalledProcessError):
+        except SiteSurveyError as ex:
+            print('Error: {}'.format(ex))
+        except KeyboardInterrupt:
             print('')
-            pass
         finally:
             self.disconnect()
 
