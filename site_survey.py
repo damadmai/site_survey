@@ -77,7 +77,7 @@ class SiteSurvey:
                     uptime[bssid] = 0
 
                 print('\n'.join(screen))
-        except KeyboardInterrupt:
+        except (KeyboardInterrupt, subprocess.CalledProcessError):
             print('')
             pass
         finally:
