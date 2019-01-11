@@ -23,8 +23,8 @@ class SiteSurvey:
     def connect(self, s):
         if not self._controlmaster:
             self._controlmaster = subprocess.Popen(['sshpass',
-                    '-p', s.pw, 'ssh'] + self._cm_options + [
-                    '-o', 'LogLevel=error', '-MNn', '-l', s.user, s.host])
+                    '-p', s.password, 'ssh'] + self._cm_options + [
+                    '-o', 'LogLevel=error', '-MNn', '-l', s.user, s.address])
 
     def disconnect(self):
         if self._controlmaster:
@@ -46,7 +46,7 @@ class SiteSurvey:
                 if s.remote:
                     res = subprocess.check_output(['ssh'] +
                             self._cm_options + [
-                            '-l', s.user, s.host,
+                            '-l', s.user, s.address,
                             'iwlist', s.intf, 'scan'])
                 else:
                     res = iw_parse.call_iwlist(s.intf)
@@ -92,7 +92,10 @@ class SiteSurvey:
         )
 
 if __name__ == "__main__":
-    import settings
+    from settings import ArgumentHandler
+
+    argument_handler = ArgumentHandler()
+    argument_handler.get_arguments()
 
     sur = SiteSurvey()
-    sur.scan(settings.s)
+    sur.scan(argument_handler)
