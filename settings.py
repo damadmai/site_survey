@@ -52,6 +52,18 @@ class ArgumentHandler():
     def invert(self):
         return self._args.invert
 
+    @property
+    def time(self):
+        return self._args.time
+
+    @staticmethod
+    def valid_time(val):
+        f = float(val)
+        limit = 0.01
+        if f < limit:
+            raise argparse.ArgumentTypeError(f"invalid time value: '{val}' < {limit}")
+        return f
+
     def get_arguments(self):
         p = argparse.ArgumentParser()
 
@@ -64,5 +76,6 @@ class ArgumentHandler():
         p.add_argument('-n', '--openonly', action='store_true', help='Only show unencrypted open nets')
         p.add_argument('-o', '--order', type=str, default='r', choices=list(self.fields.keys()), help='Specify field for ordering, Quality is default, options: {}'.format(self.fields))
         p.add_argument('-v', '--invert', action='store_true', help='Invert sorting order')
+        p.add_argument('-t', '--time', type=self.valid_time, default=0.5, help='Minimum time between scans in decimal seconds')
         self._args = p.parse_args()
 

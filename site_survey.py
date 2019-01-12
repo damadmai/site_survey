@@ -2,6 +2,7 @@
 
 import re
 import subprocess
+import threading
 import time
 
 import iw_parse
@@ -42,10 +43,12 @@ class SiteSurvey:
                 time.sleep(1)
             uptime = {}
             cells_all = {}
+            event = threading.Event()
             while True:
                 bssids = set()
                 screen = []
-                time.sleep(0.5)
+                timer = threading.Timer(s.time, event.set)
+                timer.start()
                 screen.append('\033c')
                 if s.remote:
                     try:
@@ -80,7 +83,7 @@ class SiteSurvey:
                         continue
                     bssid = cell['Address']
                     line = self._format_cell(cell)
-                    line = line + '{:>6}'.format(uptime[bssid])
+                    line = line + '{:>6}'.format(int(uptime[bssid] * s.time))
                     if not bssid in bssids:
                         line = '\033[33m' + line + '\033[0m'
                     if s.ssid and s.ssid in line:
@@ -90,10 +93,14 @@ class SiteSurvey:
                     uptime[bssid] = 0
 
                 print('\n'.join(screen))
+                event.wait()
+                event.clear()
         except SiteSurveyError as ex:
             print('Error: {}'.format(ex))
         except KeyboardInterrupt:
             print('')
+            timer.cancel()
+            event.set()
         finally:
             self.disconnect()
 
