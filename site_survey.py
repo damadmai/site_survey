@@ -19,7 +19,7 @@ class SiteSurvey:
             '-o', 'StrictHostKeyChecking=no',
             '-o', 'UserKnownHostsFile=/dev/null',
             '-o', 'ControlMaster=auto',
-            '-o', 'ControlPath ~/.ssh/.%C',
+            '-o', 'ControlPath=~/.ssh/.%C',
         ]
 
     def __del__(self):
@@ -29,7 +29,8 @@ class SiteSurvey:
         if not self._controlmaster:
             self._controlmaster = subprocess.Popen(['sshpass',
                     '-p', s.password, 'ssh'] + self._cm_options + [
-                    '-o', 'LogLevel=error', '-MNn', '-l', s.user, s.address])
+                    '-o', 'LogLevel=error', '-MNn', '-l',
+                    s.user, s.address, '-p', s.port])
 
     def disconnect(self):
         if self._controlmaster:
@@ -54,7 +55,7 @@ class SiteSurvey:
                     try:
                         res = subprocess.check_output(['ssh'] +
                                 self._cm_options + [
-                                '-l', s.user, s.address,
+                                '-l', s.user, s.address, '-p', s.port,
                                 'iwlist', s.intf, 'scan'])
                     except subprocess.CalledProcessError:
                         raise SiteSurveyError('Could not connect via SSH')

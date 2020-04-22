@@ -41,6 +41,10 @@ class ArgumentHandler():
         return self._args.address
 
     @property
+    def port(self):
+        return self._args.port
+
+    @property
     def openonly(self):
         return self._args.openonly
 
@@ -73,6 +77,7 @@ class ArgumentHandler():
         p.add_argument('-u', '--user', type=str, default='ubnt', help='SSH user')
         p.add_argument('-p', '--password', type=str, default='ubnt', help='SSH password')
         p.add_argument('-a', '--address', type=str, default='192.168.1.20', help='SSH host address')
+        p.add_argument('-P', '--port', type=str, default='22', help='SSH port')
         p.add_argument('-n', '--openonly', action='store_true', help='Only show unencrypted open nets')
         p.add_argument('-o', '--order', type=str, default='r', choices=list(self.fields.keys()), help='Specify field for ordering, Quality is default, options: {}'.format(self.fields))
         p.add_argument('-v', '--invert', action='store_true', help='Invert sorting order')
